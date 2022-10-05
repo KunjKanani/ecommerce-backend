@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RazorPay</title>
+</head>
+
+<body>
+    <button id="rzp-button1">Pay</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        const rpbutton = document.getElementById('rzp-button1');
+
+        rpbutton.addEventListener('click', async (event) => {
+            const response = await fetch('/api/v1/razorpayPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDNjNDZjODlmMDhkNWUwYzQyNjdiOCIsImlhdCI6MTY2MDU3MTU1MSwiZXhwIjoxNjYwODMwNzUxfQ.OM0_QdYZV7fkqbIa8wHcY87BT6uMxdotAMz58xaj42I'
+                },
+                body: JSON.stringify({
+                    amount: 500,
+                })
+            });
+            
+            const data = await response.json();
+            const { order } = data;
+            console.log(data);
+            var options = {
+                key: "rzp_test_l3y9G8PY7Ya5cV", // Enter the Key ID generated from the Dashboard
+                amount: 500, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                currency: "INR",
+                order_id: order.id,
+                handler: function (response) {
+                    alert(response.razorpay_payment_id);
+                    alert(response.razorpay_order_id);
+                    alert(response.razorpay_signature)
+                },
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+
+        });
+    </script>
+</body>
+
+</html>

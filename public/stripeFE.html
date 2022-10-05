@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RazorPay</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <button id="rzp-button1">Pay</button>
+    <form id="payment-form">
+        <div id="payment-element">
+            <!-- Elements will create form elements here -->
+        </div>
+        <button id="submit">Submit</button>
+        <div id="error-message">
+            <!-- Display error message to your customers here -->
+        </div>
+    </form>
+    <script>
+        const options = {
+            clientSecret: 'pk_test_51LX4IzSBKo2DX9XvIW8Rxd56LdwVoSreonMOHgKF381UoA1yT6h3HvlXRcjTOjshWubLidr08vMTeXuTiQGyZewK00COcdxU19',
+        };
+
+        // Set up Stripe.js and Elements to use in checkout form, passing the client secret obtained in step 2
+        const elements = stripe.elements(options);
+
+        // Create and mount the Payment Element
+        const paymentElement = elements.create('payment');
+        paymentElement.mount('#payment-element');
+    </script>
+</body>
+
+</html>

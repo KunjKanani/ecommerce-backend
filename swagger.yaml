@@ -1,0 +1,230 @@
+openapi: 3.0.0
+info:
+  title: Building E-Commerce backend
+  descrition: It nice...
+  version: 1.1.0
+  contact:
+    email: kunjkanani27@gmail.com
+    url: "http://kunjkanani.com"
+
+# server:
+#   - url: "http://localhost:4000/api/v1"
+#     descrition: For localhost
+#   - url: "http://kunjkanani/api/v1"
+#     descrition: For reguler
+
+servers:
+  - url: "{protocol}://localhost:4000/api/{version}"
+    descrition: For localhost
+    variables:
+      version:
+        default: v1
+        enum:
+          - v1
+          - v2
+      protocol:
+        default: http
+        enum:
+          - http
+          - https
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /:
+    get:
+      tags:
+        - Basic
+      summary: returns Greet msg...
+      responses:
+        200:
+          description: All Good and success.
+          content:
+            appllication/json:
+              schema:
+                type: string
+                example: "My String"
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+  /signup:
+    post:
+      tags:
+        - Auth
+      summary: Register new user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+                password: 
+                  type: string
+                  writeOnly: true
+                  minLength: 6
+                name:
+                  type: string
+                photo:
+                  type: string
+                  format: binary
+              required:
+                - email
+                - password
+                - name
+      responses:
+        200:
+          description: User Created
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: bool
+                  token:
+                    type: string
+                  user: 
+                    type: object
+                    properties:
+                      _id: 
+                        type: string
+                      createdAt: 
+                        type: string
+                      name: 
+                        type: string
+                      email: 
+                        type: string
+                        format: email
+                      role: 
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          secure_url: 
+                            type: string
+                example:
+                  success: true
+                  name: John Doe
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDNkNGEyMDBmZmU5NGFhMWM4ODVjNSIsImlhdCI6MTY1ODA0OTY5OCwiZXhwIjoxNjU4MzA4ODk4fQ.Se6ds547-bic5TWk2zTQEmec7ASKlqVh8mwRjQpx_CQ
+                  user: 
+                    email: xyz@xyz.com
+                    password: 123456
+                    role: user
+                    _id: 62d3d4a200ffe94aa1c885c5
+                    createdAt: 2022-07-17T09:21:38.365Z
+                    photo:
+                      id: e-commerce/l5u1ih7xql8pv6pu9o
+                      secure_url: https://res.cloudinary.com/dmxopx7ab/image/upload/v1658049697/e-commerce/l5u1ih7xql8pmv6pu49o.png
+  /signin:
+    post:
+      tags:
+        - Auth
+      summary: Authenticate User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+                password: 
+                  type: string
+                  writeOnly: true
+                  minLength: 6
+              required:
+                - email
+                - password
+              example:
+                email: one@kunj.com
+                password: '123456'
+      responses:
+        200:
+          description: User Created
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: bool
+                  token:
+                    type: string
+                  user: 
+                    type: object
+                    properties:
+                      _id: 
+                        type: string
+                      createdAt: 
+                        type: string
+                      name: 
+                        type: string
+                      email: 
+                        type: string
+                        format: email
+                      role: 
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          secure_url: 
+                            type: string
+                example:
+                  success: true
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDNkNGEyMDBmZmU5NGFhMWM4ODVjNSIsImlhdCI6MTY1ODA0OTY5OCwiZXhwIjoxNjU4MzA4ODk4fQ.Se6ds547-bic5TWk2zTQEmec7ASKlqVh8mwRjQpx_CQ
+                  user: 
+                    name: John Doe
+                    email: xyz@xyz.com
+                    role: user
+                    _id: 62d3d4a200ffe94aa1c885c5
+                    createdAt: 2022-07-17T09:21:38.365Z
+                    photo:
+                      id: e-commerce/l5u1ih7xql8pv6pu9o
+                      secure_url: https://res.cloudinary.com/dmxopx7ab/image/upload/v1658049697/e-commerce/l5u1ih7xql8pmv6pu49o.png
+  /logout:
+    get:
+      tags:
+        - Auth
+      summary: Logging out user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              cookieAuth: true
+              properties:
+                token: 
+                  type: string
+              required:
+                - token
+      responses:
+        200:
+          description: Logout success
+          content:
+            appllication/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: bool
+                  message: 
+                    type: string
+                example:
+                  success: true
+                  message: Logout Success
