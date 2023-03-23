@@ -132,7 +132,7 @@ exports.passwordReset = BigPromise(async (req, res, next) => {
 
 
     const user = await User.findOne({
-        encryptedToken,
+        forgotPasswordToken: encryptedToken,
         forgotPasswordExpiry: {
             $gt: Date.now(),
         },
